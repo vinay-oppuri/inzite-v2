@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={jetBrainsMono.variable}>
+      <body className={`${jetBrainsMono.variable} min-h-screen antialiased`}>
         <ThemeProvider>
           {children}
         </ThemeProvider>
