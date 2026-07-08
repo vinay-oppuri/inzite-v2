@@ -1,34 +1,47 @@
-from __future__ import annotations
-
-from src.core.llm.gemini_client import generate_structured
+from src.core.llm.groq_client import generate_structured
 from src.core.schemas import GraphState, StartupIntent
 
 
 async def intent_parser_node(state: GraphState) -> dict:
-    """Parse the raw startup idea through Gemini structured output."""
-    idea = _normalize_text(state.idea_raw)
-    return {"intent": await _parse_with_gemini(idea)}
+    """
+    Converts the user's startup idea into structured StartupIntent data.
+    """
+
+    if not state.idea_raw.strip():
+        raise ValueError("Startup idea cannot be empty")
+
+    intent = await parse_intent(state.idea_raw)
+
+    return {"intent": intent}
 
 
-async def _parse_with_gemini(idea: str) -> StartupIntent:
+async def parse_intent(idea: str) -> StartupIntent:
+    """Parse the startup idea using Groq structured output."""
+
+    messages = [
+        (
+            "system",
+            """
+            Extract the startup idea into the StartupIntent schema.
+
+            Rules:
+            - Use only information provided by the user.
+            - Do not use outside knowledge.
+            - Preserve idea_raw exactly as provided.
+            - Use short and concrete phrases.
+            - Choose business_model from the allowed enum.
+            - Use "unspecified" when industry or target audience is missing.
+            - Include competitor, paper, and trend agents unless
+              one of them is clearly irrelevant.
+            """,
+        ),
+        (
+            "human",
+            f"Startup idea:\n{idea}",
+        ),
+    ]
+
     return await generate_structured(
-        [
-            (
-                "system",
-                "You extract a startup idea into the StartupIntent schema. "
-                "Use only the user's idea, not outside knowledge. "
-                "Keep idea_raw exactly as the user wrote it. "
-                "Use concise, concrete phrases. "
-                "Choose business_model from the enum. "
-                "Use 'unspecified' for missing industry or audience. "
-                "For agent_triggers, include competitor, paper, and trend unless "
-                "one is clearly irrelevant.",
-            ),
-            ("human", f"Startup idea:\n{idea}"),
-        ],
-        StartupIntent,
+        messages=messages,
+        schema=StartupIntent,
     )
-
-
-def _normalize_text(text: str) -> str:
-    return " ".join(text.split())
