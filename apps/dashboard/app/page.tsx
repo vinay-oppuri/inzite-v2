@@ -1,17 +1,36 @@
-import { HomeIcon } from "lucide-react";
-import Link from "next/link";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+import { auth } from "../lib/auth";
+import SignOutButton from "../components/sign-out-button";
+
+export default async function Home() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect("/sign-in");
+  }
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-24">
-      <h1 className="animate-pulse bg-linear-to-r from-foreground/80 to-muted-foreground bg-clip-text text-4xl font-bold text-transparent">
-        Dashboard - Inzite V2
-      </h1>
-      <Link href="http://localhost:3000/">
-        <button className="flex items-center mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-          <HomeIcon className="mr-2 w-5 h-5"/> Home
-        </button>
-      </Link>
-    </div>
+    <main className="min-h-screen px-6 py-8">
+      <header className="mx-auto flex w-full max-w-5xl items-center justify-between border-b border-border pb-5">
+        <div>
+          <h1 className="text-2xl font-semibold">Inzite Dashboard</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Signed in as {session.user.email}
+          </p>
+        </div>
+        <SignOutButton />
+      </header>
+
+      <section className="mx-auto mt-8 w-full max-w-5xl">
+        <h2 className="text-lg font-semibold">Research workspace</h2>
+        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+          Your saved startup research runs will appear here.
+        </p>
+      </section>
+    </main>
   );
 }

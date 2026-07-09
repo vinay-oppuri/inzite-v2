@@ -8,10 +8,22 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint --max-warnings 0",
-    "check-types": "next typegen && tsc --noEmit"
+    "check-types": "next typegen && tsc --noEmit",
+    "auth:generate": "bunx auth@latest generate",
+    "auth:migrate": "bun run auth:generate && bun run db:generate && bun run db:migrate",
+    "db:push": "drizzle-kit push",
+    "db:pull": "drizzle-kit pull",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@better-auth/drizzle-adapter": "^1.6.23",
+    "@neondatabase/serverless": "^1.1.0",
     "@repo/ui": "*",
+    "better-auth": "^1.6.23",
+    "dotenv": "^17.4.2",
+    "drizzle-orm": "^0.45.2",
     "lucide-react": "^1.23.0",
     "next": "16.2.0",
     "next-themes": "^0.4.6",
@@ -26,7 +38,10 @@
     "@types/node": "^22.15.3",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
+    "drizzle-kit": "0.31.8",
+    "esbuild": "^0.28.1",
     "eslint": "^9.39.1",
+    "tsx": "^4.23.0",
     "typescript": "5.9.2"
   }
 }
