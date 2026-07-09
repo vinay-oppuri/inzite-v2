@@ -1,0 +1,17 @@
+[
+  {
+    "id": "job-seeker-copilot",
+    "idea": "AI copilot for job seekers",
+    "expected_agents": ["competitor", "paper", "trend"]
+  },
+  {
+    "id": "clinic-no-show-board",
+    "idea": "Signal board for missed appointments for clinics",
+    "expected_agents": ["competitor", "paper", "trend"]
+  },
+  {
+    "id": "excess-food-marketplace",
+    "idea": "Marketplace for local restaurants to sell excess food to consumers",
+    "expected_agents": ["competitor", "paper", "trend"]
+  }
+]

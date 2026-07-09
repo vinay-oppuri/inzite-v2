@@ -8,3 +8,11 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Local app state
+.env
+.pytest_cache/
+.mypy_cache/
+data/
+logs/
+qdrant_storage/

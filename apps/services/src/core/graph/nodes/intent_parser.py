@@ -1,5 +1,9 @@
+import logging
+
 from src.core.llm.groq_client import generate_structured
 from src.core.schemas import GraphState, StartupIntent
+
+logger = logging.getLogger(__name__)
 
 
 async def intent_parser_node(state: GraphState) -> dict:
@@ -10,6 +14,7 @@ async def intent_parser_node(state: GraphState) -> dict:
     if not state.idea_raw.strip():
         raise ValueError("Startup idea cannot be empty")
 
+    logger.info("Running Intent Parser")
     intent = await parse_intent(state.idea_raw)
 
     return {"intent": intent}
@@ -18,6 +23,7 @@ async def intent_parser_node(state: GraphState) -> dict:
 async def parse_intent(idea: str) -> StartupIntent:
     """Parse the startup idea using Groq structured output."""
 
+    logger.info("Parsing startup intent with Groq")
     messages = [
         (
             "system",

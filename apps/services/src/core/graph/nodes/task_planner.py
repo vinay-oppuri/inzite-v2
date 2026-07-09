@@ -1,6 +1,9 @@
+import logging
 from typing import Literal
 
 from src.core.schemas import GraphState, ResearchTask, StartupIntent, TaskPlan
+
+logger = logging.getLogger(__name__)
 
 
 async def task_planner_node(state: GraphState) -> dict:
@@ -12,6 +15,7 @@ async def task_planner_node(state: GraphState) -> dict:
     if state.intent is None:
         raise ValueError("intent_parser_node must run first")
 
+    logger.info("Running Task Planner")
     intent = state.intent
     tasks: list[ResearchTask] = []
 
@@ -40,6 +44,7 @@ def build_query(
     Creates the search query for each research agent.
     """
 
+    logger.debug("Building %s research query", agent)
     if agent == "competitor":
         query = (
             f"Find competitors and alternative solutions for "
@@ -85,6 +90,7 @@ def get_priority(
     Lower number = higher priority.
     """
 
+    logger.debug("Assigning %s task priority", agent)
     if agent == "competitor":
         return 1
 
